@@ -40,7 +40,25 @@ return {
       },
     },
   },
+
   --above are very important plugins
+  {
+    "zbirenbaum/copilot.lua",
+    lazy = true,
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require "configs.copilot"
+    end,
+  },
+
+  {
+    "zbirenbaum/copilot-cmp",
+    config = function ()
+      require("copilot_cmp").setup()
+    end
+  },
+  --github copilot
   {
     "mfussenegger/nvim-dap",
     config = function()
@@ -92,6 +110,24 @@ return {
     ft = "rust",
     init = function()
       vim.g.rustfmt_autosave = 1
+    end,
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = "zbirenbaum/copilot-cmp",
+    config = function(_, opts)
+      local settings = require "configs.nvim-cpm"
+      opts = vim.tbl_deep_extend("force", opts, settings)
+      opts.sources = {
+        { name = "copilot", group_index = 2 },
+        { name = "nvim_lsp", group_index = 2 },
+        { name = "nvim_lua", group_index = 2 },
+        { name = "path" , group_index = 2},
+        { name = "buffer" , group_index = 2},
+        { name = "luasnip" , group_index = 2},
+      }
+      require("cmp").setup(opts)
     end,
   },
 }
